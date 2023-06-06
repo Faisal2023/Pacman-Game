@@ -1,0 +1,106 @@
+using System;
+
+class PacmanGame
+{
+    // Constants for the game dimensions
+    const int Width = 21;
+    const int Height = 7;
+
+    // Pac-Man position variables
+    int pacManX;
+    int pacManY;
+
+    // Maze grid
+    char[,] maze = new char[Height, Width]
+    {
+        { '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#' },
+        { '#', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '#' },
+        { '#', '#', '#', ' ', '#', '#', ' ', '#', ' ', '#', '#', '#', '#', ' ', ' ', '#', '#', '#', ' ', ' ', '#' },
+        { '#', ' ', ' ', ' ', '#', ' ', ' ', ' ', ' ', '#', ' ', ' ', '#', ' ', '#', ' ', ' ', ' ', ' ', ' ', '#' },
+        { '#', '#', '#', ' ', '#', '#', '#', '#', ' ', '#', '#', ' ', '#', ' ', '#', '#', '#', '#', '#', '#', '#' },
+        { '#', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '#', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '#' },
+        { '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#' }
+    };
+
+    // Function to print the maze
+    void PrintMaze()
+    {
+        for (int i = 0; i < Height; i++)
+        {
+            for (int j = 0; j < Width; j++)
+            {
+                Console.Write(maze[i, j] + " ");
+            }
+            Console.WriteLine();
+        }
+    }
+
+    // Function to move Pac-Man
+    void MovePacMan(ConsoleKeyInfo key)
+    {
+        // Clear Pac-Man's current position
+        maze[pacManY, pacManX] = ' ';
+
+        // Move Pac-Man based on the provided key
+        switch (key.Key)
+        {
+            case ConsoleKey.W: // Up
+                if (pacManY > 0 && maze[pacManY - 1, pacManX] != '#')
+                    pacManY--;
+                break;
+
+            case ConsoleKey.S: // Down
+                if (pacManY < Height - 1 && maze[pacManY + 1, pacManX] != '#')
+                    pacManY++;
+                break;
+
+            case ConsoleKey.A: // Left
+                if (pacManX > 0 && maze[pacManY, pacManX - 1] != '#')
+                    pacManX--;
+                break;
+
+            case ConsoleKey.D: // Right
+                if (pacManX < Width - 1 && maze[pacManY, pacManX + 1] != '#')
+                    pacManX++;
+                break;
+        }
+
+        // Update Pac-Man's new position
+        maze[pacManY, pacManX] = '>';
+    }
+
+    void RunGame()
+    {
+        // Initialize Pac-Man's starting position
+        pacManX = 1;
+        pacManY = 1;
+
+        ConsoleKeyInfo key;
+        bool gameover = false;
+
+        // Game loop
+        while (!gameover)
+        {
+            Console.Clear(); // Clear the console
+
+            PrintMaze(); // Print the maze
+
+            // Get user input for Pac-Man's movement
+            key = Console.ReadKey(true);
+            MovePacMan(key);
+
+            // Check for game over condition (for simplicity, we assume reaching the exit is the win condition)
+            if (pacManX == Width - 2 && pacManY == Height - 2)
+            {
+                gameover = true;
+                Console.WriteLine("Congratulations! You won!");
+            }
+        }
+    }
+
+    static void Main(string[] args)
+    {
+        PacmanGame game = new PacmanGame();
+        game.RunGame();
+    }
+}
